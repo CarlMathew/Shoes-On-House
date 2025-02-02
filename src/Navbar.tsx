@@ -4,15 +4,16 @@ import {  NavbarProps } from "./types";
 
 
 
-export default function Navbar({contentList, order}: NavbarProps): JSX.Element | null | string {
+export default function Navbar({contentList, order, linkList}: NavbarProps): JSX.Element | null | string {
+    
     const [openOptions, setOpenOptions] = useState<boolean>(false);
     return ( 
         <div className=" md:bg-slate-950  border-1 border-black md:p-5 md:px-10 text-white w-full z-50 fixed md:relative">
             <div className=" w-full hidden md:flex ">
                 <div className="w-1/2 md:visible">Shoes on House</div>
                 <ul className="w-1/2 flex justify-end gap-6">
-                    {contentList.map((content) => (
-                        <li className="hover:text-slate-400"><a href="">{content}</a></li>
+                    {contentList.map((content, i) => (
+                        <li className="hover:text-slate-400"><a href={linkList[0]}>{content}</a></li>
                     ))}
                     <li className="">
                         <a href="/checkout" className="flex items-center justify-center gap-1">
@@ -33,7 +34,7 @@ export default function Navbar({contentList, order}: NavbarProps): JSX.Element |
                 </div>
             </div>
 
-            <div className={`bg-slate-950 md:hidden px-10 ${openOptions ? "transition-all translate-y-0": "transition-all -translate-y-40 "}`}>
+            <div className={`bg-slate-950 md:hidden px-10 ${openOptions ? "transition-all translate-y-0": "transition-all -translate-y-40"}`}>
                 <hr className=" border-slate-700"/>
                 <ul className=" flex flex-col justify-end gap-2 mt-2 pb-4">
                     {contentList.map((content) => (

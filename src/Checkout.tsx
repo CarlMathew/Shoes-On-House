@@ -1,21 +1,47 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import "./Checkout.css"
-import { orderDetails, OrderProps, QuantityButtonProps } from "./types";
+import { CheckOutProps, orderDetails, OrderProps, QuantityButtonProps, RemoveDialogProps } from "./types";
 
-export default function Checkout( {orders}: {order:orderDetails[]}): JSX.Element | string | null {
+export default function Checkout({orders, handleOrder} :CheckOutProps): JSX.Element | string | null {
     const [quantity, setQuantity] = useState<number>(1);
-    console.log(orders)
+    const removeDialog = useRef<HTMLDialogElement>(null)
+    const [removeId, setRemoveId] = useState<number | string | null>(0);
+
+    const openDialog = () => {
+        removeDialog.current?.showModal()
+      
+    }
+    const closeModal = () => {
+        removeDialog.current?.close()
+    }
     return (
         <div className = "px-10 p-5">
+            <RemoveDialog 
+                dialogRef = {removeDialog}  
+                closeModal = {closeModal} 
+                removeId = {removeId}  
+                orders = {orders}
+                handleOrder={handleOrder}
+                
+            />
             <h1 className="text-6xl font-bold mt-20 md:mt-5">YOUR CART</h1>
             <div className="flex flex-col lg:flex-row gap-5 mt-10 md:mt-16">
                 <div className="w-[75%] hidden lg:block">
-                    <Orders quantity = {quantity} setQuantity = {setQuantity} orders ={orders}/>
+                    <Orders 
+                        quantity = {quantity} 
+                        setQuantity = {setQuantity} 
+                        orders ={orders} 
+                        openDialog = {openDialog} 
+                        setRemoveId = {setRemoveId}
+                        handleOrder = {handleOrder}
+                
+        
+                    />
                 </div>
                 <div className="w-full block lg:hidden">
                     <OrdersMobile quantity = {quantity} setQuantity = {setQuantity} orders={orders}/>
@@ -30,7 +56,28 @@ export default function Checkout( {orders}: {order:orderDetails[]}): JSX.Element
 }
 
 
-function Orders({quantity, setQuantity, orders}: OrderProps): JSX.Element | string | null {
+
+function RemoveDialog({dialogRef, closeModal, removeId, orders, handleOrder}: RemoveDialogProps): JSX.Element | null | string {
+    const productName: orderDetails | null = orders.filter((data) => data.id == removeId)[0] 
+    function RemoveItem(){
+
+        const remainingOrders: orderDetails[] = orders.filter(data => data.id != removeId)
+        handleOrder(remainingOrders)
+        closeModal()
+    }
+    return (
+        <dialog className="p-6 rounded-2xl shadow-xl" ref = {dialogRef}> 
+            
+            <h1 className="font-bold text-xl">Remove {productName ?  productName.name : ""} from your cart?</h1>
+            <div className="flex mt-6 items-center justify-center gap-20">
+                <button className="px-4 bg-red-600 text-white font-bold rounded text-xl transition-transform duration-150 hover:scale-110 active:scale-75" onClick={RemoveItem}>Yes</button>
+                <button className="px-4 bg-green-600 text-white font-bold rounded text-xl transition-transform duration-150 hover:scale-110 active:scale-75" onClick={closeModal}>No</button>
+            </div>
+        </dialog>
+    )
+}
+
+function Orders({quantity, setQuantity, orders, openDialog, setRemoveId, handleOrder}: OrderProps): JSX.Element | string | null {
 
 
 
@@ -47,17 +94,23 @@ function Orders({quantity, setQuantity, orders}: OrderProps): JSX.Element | stri
                 <>
                 <div className="flex w-full">
                     <div className="flex w-[40%]">
-                        <img src={data.imgURL} alt="" className="w-[150px] h-[150px]" />
+                        <img src={data.imgURL} alt="" className="w-[150px] h-[150px] mt-1" />
                         <div className="mt-6">
-                            <h1>{data.name}</h1>
+                            <h1 className="font-bold">{data.name}</h1>
                             <h1 className="mt-2">Size {data.size}</h1>
                         </div>
                     </div>
                     <h1 className="flex w-[20%] text-xl mt-6">${data.price}</h1>
-                    <QuantityButton quantity = {quantity} setQuantity = {setQuantity} />
-                    <h1 className="flex w-[10%] text-xl mt-6"></h1>
+   
+                    <QuantityButton quantity = {quantity} setQuantity = {setQuantity} orders={orders} uid = {data.id} ordersQuantity = {data.quantity} handleOrder = {handleOrder}/>
+                    <h1 className="flex w-[10%] text-xl mt-6">${(data.price * data.quantity).toFixed(2)}</h1>
                     <div className="w-[10%] flex items-end justify-end">
-                        <button className="rounded-full border-red-500 border-2 px-4 transition-all duration-200 hover:scale-110 hover:bg-red-500 hover:text-white hover:shadow-lg">Remove</button>
+                        <button className="rounded-full border-red-500 border-2 px-4 transition-all duration-200 hover:scale-110 hover:bg-red-500 hover:text-white hover:shadow-lg" 
+                        onClick={(e) => {
+                            openDialog() 
+                            setRemoveId(e.currentTarget.getAttribute("data-id"))
+                        }} 
+                        data-id = {data.id}>Remove</button>
                     </div>
                     
                 </div>
@@ -153,7 +206,7 @@ function OrdersMobile({quantity, setQuantity}: QuantityButtonProps): JSX.Element
                         <h1 className="mt-2">Price: $15.99</h1>
                         <div className="flex gap-2 mt-2">
                             <h1 className="text-center">Quantity:</h1>
-                            <QuantityButton quantity={quantity} setQuantity={setQuantity}/>
+                            <QuantityButton quantity={quantity} setQuantity={setQuantity} />
                         </div>
                         <h1 className="mt-2">Subtotal</h1>
                     </div>
@@ -178,18 +231,29 @@ function OrdersMobile({quantity, setQuantity}: QuantityButtonProps): JSX.Element
     )
 }
 
-function QuantityButton({quantity, setQuantity}: QuantityButtonProps): JSX.Element | string | null {
+function QuantityButton({ordersQuantity, uid, orders, handleOrder}: QuantityButtonProps): JSX.Element | string | null {
+    function minusQuantity (){
+        const quantityAdd:orderDetails[] = orders.map(data => data.id == uid ? {...data, quantity: data.quantity > 1 ? data.quantity - 1 : 1} : data )
+        handleOrder(quantityAdd)
+    }
+
+    function addQuantity(){
+        const quantityAdd:orderDetails[] = orders.map(data => data.id == uid ? {...data, quantity: data.quantity + 1} : data )
+
+        handleOrder(quantityAdd)
+   
+    }
 
     return (
         <div className="flex w-[20%] gap-1">
         <div className="md:mt-6">
-            <button className="transition-all duration-75 active:scale-75 font-bold px-2 rounded border-2" onClick={() => quantity > 1 ? setQuantity(quantity - 1) : 1}>-</button>    
+            <button className="transition-all duration-75 active:scale-75 font-bold px-2 rounded border-2" onClick={minusQuantity}>-</button>    
         </div>
         <div>
-            <h1 className=" md:mt-6 px-4 border-2">{quantity}</h1>
+            <h1 className=" md:mt-6 px-4 border-2">{ordersQuantity}</h1>
         </div>
         <div className="md:mt-6">
-            <button className="transition-all duration-75 active:scale-75 font-bold px-2 rounded border-2" onClick={() => setQuantity(quantity + 1)}>+</button>    
+            <button className="transition-all duration-75 active:scale-75 font-bold px-2 rounded border-2" onClick={addQuantity}>+</button>    
         </div>
     </div>
     )

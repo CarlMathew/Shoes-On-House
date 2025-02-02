@@ -34,10 +34,10 @@ function App(): JSX.Element | null | string {
 
   return (
     <Router>
-      <Navbar contentList={["Home", "About", "Shop More"]} order = {order} />
+      <Navbar contentList={["Home", "About", "Shop More"]} order = {order} linkList = {["/Shop", "/", "/"]}/>
       <Routes>
         <Route
-          path="/"
+          path="/Shop"
           element={
             <>
               <BackgroundPicture />
@@ -48,7 +48,8 @@ function App(): JSX.Element | null | string {
         />
         <Route path="/checkout" element={
           <Checkout 
-            ordersv  = {order}
+            orders = {order}
+            handleOrder={handleOrder}
         />} />
       </Routes>
     </Router>

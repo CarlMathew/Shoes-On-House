@@ -3,15 +3,27 @@ import React, { useState, type PropsWithChildren } from "react"
 
 export interface QuantityButtonProps {
     quantity: number,
-    setQuantity: React.Dispatch<React.SetStateAction<number>>
+    setQuantity: React.Dispatch<React.SetStateAction<number>>,
+    orders: orderDetails[]
+    uid?: string | number
+    ordersQuantity?: number | string | undefined
+    handleOrder: (updateOrders: orderDetails[]) => void
 
 }
 
 
 export interface OrderProps extends QuantityButtonProps {
-    orders: orderDetails[]
+    orders: orderDetails[],
+    openDialog: () => void
+    setRemoveId: React.Dispatch<React.SetStateAction<number | string | null>>
+    handleOrder: (updateOrders: orderDetails[]) => void
+
 }
 
+export interface CheckOutProps {
+    orders:orderDetails[], 
+    handleOrder: (orders: orderDetails[]) => void
+}
 
 export interface shopListInterface {
     readonly id: number,
@@ -31,6 +43,15 @@ export interface DialogProps{
     handleOrder: (orders: orderDetails[]) => void
     clearAll: () => void
     
+}
+
+export interface RemoveDialogProps {
+    dialogRef : React.RefObject<HTMLDialogElement>
+    closeModal : () => void
+    removeId: number | string | null
+    orders:orderDetails[]
+    shoesData: detailsInterface[] | null
+    handleOrder: (orders: orderDetails[]) => void
 }
 
 
@@ -75,8 +96,8 @@ export interface orderDetails extends detailsInterface {
 
 }
 
-
 export type NavbarProps = {
     contentList: string[]
+    linkList: string[]
     order: orderDetails[]
 }

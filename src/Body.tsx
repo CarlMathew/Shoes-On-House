@@ -283,7 +283,6 @@ export default function BodyElement({ orderData, handleOrder, clearAll }: BodyPr
 
     const openDialog = () => {
         dialogRef.current?.showModal()
-        console.log(orderIdNumber)
 
     }
     const closeModal = () => {
