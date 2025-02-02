@@ -1,0 +1,3 @@
+.prev-button, .next-button {
+    @apply bg-red-50
+}

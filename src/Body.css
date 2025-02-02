@@ -1,0 +1,36 @@
+#qoute {
+  font-weight: 200;
+}
+
+/* Apply styles to all scrollable elements */
+::-webkit-scrollbar {
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Light gray track */
+  border-radius: 10px;
+  position: absolute;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Darker gray thumb */
+  border-radius: 10px;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: black;  /* Change arrow color */
+  background: white;  /* Add background */
+  padding: 30px;  /* Add padding around arrows */
+  border-radius: 50%;  /* Make it circular */
+  width: 20px;  /* Adjust size */
+  height: 20px;  /* Adjust size */
+}
+
+/* Change size of the arrow icon itself */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 20px;  /* Adjust arrow size */
+}
+/* Hide scrollbar for specific elements (if needed) */

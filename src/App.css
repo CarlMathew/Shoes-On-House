@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#BgPic {
+  background-image: url(".\assets\Shoes_bg.png");
+  background-position: center;
+}
