@@ -13,7 +13,7 @@ export default function Navbar({contentList, order, linkList}: NavbarProps): JSX
                 <div className="w-1/2 md:visible">Shoes on House</div>
                 <ul className="w-1/2 flex justify-end gap-6">
                     {contentList.map((content, i) => (
-                        <li className="hover:text-slate-400"><a href={linkList[0]}>{content}</a></li>
+                        <li className="hover:text-slate-400"><a href={linkList[i]}>{content}</a></li>
                     ))}
                     <li className="">
                         <a href="/checkout" className="flex items-center justify-center gap-1">

@@ -3,6 +3,7 @@ import Navbar from "./Navbar"
 import Body from "./Body"
 import Footer from "./Footer"
 import Checkout from "./Checkout";
+import ShopMore from "./ShopMore";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { orderDetails } from "./types";
@@ -34,12 +35,12 @@ function App(): JSX.Element | null | string {
 
   return (
     <Router>
-      <Navbar contentList={["Home", "About", "Shop More"]} order = {order} linkList = {["/Shop", "/", "/"]}/>
       <Routes>
         <Route
           path="/Shop"
           element={
             <>
+              <Navbar contentList={["Home", "Shop More"]} order = {order} linkList = {["/Shop", "/ShopMore"]}/>
               <BackgroundPicture />
               <Body orderData = {order} handleOrder = {handleOrder} clearAll = {clearAll}/>
               <Footer />
@@ -47,10 +48,27 @@ function App(): JSX.Element | null | string {
           }
         />
         <Route path="/checkout" element={
-          <Checkout 
-            orders = {order}
-            handleOrder={handleOrder}
-        />} />
+          <>
+            <Navbar contentList={["Home", "Shop More"]} order = {order} linkList = {["/Shop", "/ShopMore"]}/>
+            <Checkout 
+              orders = {order}
+              handleOrder={handleOrder}
+            />
+        </>
+        } />
+        <Route path ="/ShopMore" element = {
+          <div className="h-screen">
+            <div className="h-[7%]">
+                <Navbar contentList={["Home", "Shop More"]} order = {order} linkList = {["/Shop", "/ShopMore"]}/>
+            </div>
+            <div className="h-[93%]">
+                <ShopMore />
+            </div>
+          </div>
+
+
+
+        }/>
       </Routes>
     </Router>
   );

@@ -5,7 +5,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import "./Checkout.css"
-import { CheckOutProps, orderDetails, OrderProps, QuantityButtonProps, RemoveDialogProps } from "./types";
+import { CheckOutProps, orderDetails, OrderProps, QuantityButtonProps, RemoveDialogProps, PaymentProps } from "./types";
 
 export default function Checkout({orders, handleOrder} :CheckOutProps): JSX.Element | string | null {
     const [quantity, setQuantity] = useState<number>(1);
@@ -44,10 +44,15 @@ export default function Checkout({orders, handleOrder} :CheckOutProps): JSX.Elem
                     />
                 </div>
                 <div className="w-full block lg:hidden">
-                    <OrdersMobile quantity = {quantity} setQuantity = {setQuantity} orders={orders}/>
+                    <OrdersMobile                      quantity = {quantity} 
+                        setQuantity = {setQuantity} 
+                        orders ={orders} 
+                        openDialog = {openDialog} 
+                        setRemoveId = {setRemoveId}
+                        handleOrder = {handleOrder}/>
                 </div> 
                 <div className="w-full lg:w-[25%]">
-                    <PaymentDetails />
+                    <PaymentDetails orders={orders}/>
                 </div>
 
             </div>
@@ -60,7 +65,6 @@ export default function Checkout({orders, handleOrder} :CheckOutProps): JSX.Elem
 function RemoveDialog({dialogRef, closeModal, removeId, orders, handleOrder}: RemoveDialogProps): JSX.Element | null | string {
     const productName: orderDetails | null = orders.filter((data) => data.id == removeId)[0] 
     function RemoveItem(){
-
         const remainingOrders: orderDetails[] = orders.filter(data => data.id != removeId)
         handleOrder(remainingOrders)
         closeModal()
@@ -123,19 +127,40 @@ function Orders({quantity, setQuantity, orders, openDialog, setRemoveId, handleO
     )
 }
 
-function PaymentDetails():JSX.Element | string | null{
+function PaymentDetails({orders} : PaymentProps):JSX.Element | string | null{
 
     const [shippingFee, setShippingFee] = useState<number>(2.35);
+    const [code, setCode] = useState<string>("")
+    const [discount, setDiscount] = useState<number>(0);
     const [country, setCountry] = useState<string>("PH");
-    
+    const [showDiscount, setShowDiscount] = useState<boolean>(false);
+    const totalPaymentOrder:number = orders.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0)
+    const overallTotal: number = totalPaymentOrder + shippingFee
 
     function handleShippingFee(e:React.ChangeEvent<HTMLSelectElement>){
         setCountry(e.target.value);
 
         if (e.target.value === "PH"){
             setShippingFee(2.35)
+
         } else {
             setShippingFee(4.5)
+
+        }
+    }
+
+    function submitCode(e){
+        e.preventDefault()
+        setShowDiscount(true)
+        if (code === "ASIA123") {
+            setDiscount(0.10)
+        } 
+        else if (code === "SHOESZXC") {
+            setDiscount(0.80)
+        }
+        else {
+            setDiscount(0)
+
         }
     }
 
@@ -153,9 +178,9 @@ function PaymentDetails():JSX.Element | string | null{
                 <div className = "p-2 px-4 ">
                     <div className="flex justify-between">
                         <h1>Subtotals</h1>
-                        <h1>Total</h1> 
+                        <h1>${totalPaymentOrder.toFixed(2)}</h1> 
                     </div>
-                    <hr className =  "mt-2 border-slate-950" />
+                    <hr className = "mt-2 border-slate-950" />
                 </div>
                 <div className = "p-2 px-4 ">
                     <div className="flex justify-between">
@@ -168,15 +193,24 @@ function PaymentDetails():JSX.Element | string | null{
                             <h1 className="mt-2 text-end">${shippingFee}</h1>
                         </div>
                     </div>
-                    <hr className =  "mt-2 border-slate-950" />
+                    <hr className = "mt-2 border-slate-950" />
                 </div>
                 <div className = "p-2 px-4 ">
                     <div className="flex justify-between">
                         <h1>Total</h1>
-                        <h1>Total</h1> 
+                        <h1>${(overallTotal - (overallTotal * discount)).toFixed(2)}</h1> 
                     </div>
                     <hr className =  "mt-2 border-slate-950" />
                 </div>
+                {showDiscount && (
+                    <div className={`italic text-sm p-2 px-4 ${discount>0 ? "text-green-400" : "text-red-400"}`}>
+                        {discount>0 ? `${discount * 100}% Discount Acquired: Save $${(overallTotal * discount).toFixed(2)}` : "Wrong Code"}
+                    </div>
+                )}
+                <form className="p-2 px-4 flex gap-1" onSubmit={submitCode}>
+                    <input type="text" name="" id="" placeholder="Promo code..." className="bg-transparent w-full border-0 border-b-2 focus:outline-none" value={code} onChange={(e) => setCode(e.target.value)}/>
+                    <button type="submit" className="border-2 px-4 bg-green-600 text-white">Ok</button>
+                </form>
                 <div className = "p-2 px-4 flex justify-center mt-2">
                     <button className="px-20 py-1 border-2 rounded-full bg-sky-300 font-bold transition-all duration-200 hover:scale-110 hover:-translate-y-2 ">Checkout</button>
                 </div>
@@ -185,7 +219,7 @@ function PaymentDetails():JSX.Element | string | null{
     )   
 }
 
-function OrdersMobile({quantity, setQuantity}: QuantityButtonProps): JSX.Element | string | null {
+function OrdersMobile({quantity, setQuantity, orders, openDialog, setRemoveId, handleOrder}: OrderProps): JSX.Element | string | null {
     return (
         <div className="pt-4 shadow border-slate-950 border-2 rounded-lg pb-4">
             <Swiper
@@ -198,32 +232,34 @@ function OrdersMobile({quantity, setQuantity}: QuantityButtonProps): JSX.Element
                 }}
                 modules={[Pagination, Navigation]}
             >
-                <SwiperSlide>
-                    <div className="flex flex-col items-center justify-center">            
-                        <img src="public/popular/sample_shoes.png" alt="" className="w-[150px] h-[150px] rounded-full shadow-lg pt-4 border-2 border-black" />
-                        <h1 className="text-xl font-bold">Stride X</h1>
-                        <h1 className="mt-2">Size: 10</h1>
-                        <h1 className="mt-2">Price: $15.99</h1>
-                        <div className="flex gap-2 mt-2">
-                            <h1 className="text-center">Quantity:</h1>
-                            <QuantityButton quantity={quantity} setQuantity={setQuantity} />
+                {orders.map((data) => (
+                    <SwiperSlide>
+                        <div className="flex flex-col items-center justify-center relative">    
+                            <button className="absolute top-0 right-4 border-2 p-2 bg-red-400 rounded shadow shadow-black"                         
+                                onClick={(e) => {
+                                openDialog() 
+                                setRemoveId(e.currentTarget.getAttribute("data-id"))
+                                }} 
+                                data-id = {data.id}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                </svg>
+                            </button>        
+                            <img src={data.imgURL}  alt="" className="w-[150px] h-[150px] rounded-full shadow-lg pt-4 border-2 border-black" />
+                            <h1 className="text-xl font-bold">{data.name}</h1>
+                            <h1 className="mt-2">Size {data.size}</h1>
+                            <h1 className="mt-2">${data.price}</h1>
+                            <div className="flex gap-2 mt-2">
+                                <h1 className="text-center">Quantity:</h1>
+                                <QuantityButton quantity = {quantity} setQuantity = {setQuantity} orders={orders} uid = {data.id} ordersQuantity = {data.quantity} handleOrder = {handleOrder}/>
+                            </div>
+                            <h1 className="mt-2">Subtotal: ${(data.price * data.quantity).toFixed(2)}</h1>
                         </div>
-                        <h1 className="mt-2">Subtotal</h1>
-                    </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <div className="flex flex-col items-center justify-center">            
-                        <img src="public/popular/sample_shoes2.png" alt="" className="w-[150px] h-[150px] rounded-full shadow-lg pt-4 border-2 border-black" />
-                        <h1 className="text-xl font-bold">Stride X</h1>
-                        <h1 className="mt-2">Size: 10</h1>
-                        <h1 className="">Price: $15.99</h1>
-                        <div className="flex gap-2">
-                            <h1 className="text-center">Quantity:</h1>
-                            <QuantityButton quantity={quantity} setQuantity={setQuantity}/>
-                        </div>
-                        <h1>Subtotal</h1>
-                    </div>
-                </SwiperSlide>
+                    </SwiperSlide>
+                ))}
+
+
             </Swiper>
             <div className="absolute top-[55%]  left-2 prev-button cursor-pointer text-xl bg-black px-2 rounded-full text-white transition-all duration-150 active:scale-50">{"<"}</div>
             <div className="absolute top-[55%]  right-2 next-button cursor-pointer text-xl bg-black px-2 rounded-full text-white transition-all duration-150 active:scale-50 ">{">"}</div>

@@ -229,7 +229,7 @@ const sliderData: sliderDetails[] = [
 ]
 
 
-function ShoeSizeDialog({dialogRef, shoeSize, setShoeSize, idNumber, orderList, handleOrder, shoesData, clearAll}: DialogProps): JSX.Element | null | string {
+function ShoeSizeDialog({dialogRef, shoeSize, setShoeSize, idNumber, orderList, handleOrder, shoesData, clearAll, closeModal}: DialogProps): JSX.Element | null | string {
     function acceptOrder(){
 
          const orderShoes: detailsInterface[] | undefined = shoesData?.find(data => data.id == idNumber);
@@ -266,7 +266,7 @@ function ShoeSizeDialog({dialogRef, shoeSize, setShoeSize, idNumber, orderList, 
                 <button className="bg-green-600 px-4 rounded-full py-1 text-white font-bold shadow-xl transition-transform duration-500 hover:-translate-y-1 hover:scale-110"
                     onClick={acceptOrder}
                 >+ Add to cart</button>
-                <button className="bg-red-600 px-4 rounded-full py-1 text-white font-bold shadow-xl transition-transform duration-500 hover:-translate-y-1 hover:scale-110" onClick={clearAll}>X Close</button>
+                <button className="bg-red-600 px-4 rounded-full py-1 text-white font-bold shadow-xl transition-transform duration-500 hover:-translate-y-1 hover:scale-110" onClick={closeModal}>X Close</button>
             </div>
         </dialog>
     )
@@ -315,6 +315,7 @@ export default function BodyElement({ orderData, handleOrder, clearAll }: BodyPr
                 handleOrder = {handleOrder}
                 shoesData = {shoesData}
                 clearAll={clearAll}
+                closeModal ={closeModal}
 
             />
             <div className="w-full flex justify-center">

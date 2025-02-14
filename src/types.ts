@@ -42,6 +42,7 @@ export interface DialogProps{
     shoesData: detailsInterface[] | null
     handleOrder: (orders: orderDetails[]) => void
     clearAll: () => void
+    closeModal: () => void
     
 }
 
@@ -100,4 +101,8 @@ export type NavbarProps = {
     contentList: string[]
     linkList: string[]
     order: orderDetails[]
+}
+
+export type PaymentProps = {
+    orders: orderDetails[]
 }
