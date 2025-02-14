@@ -1,5 +1,4 @@
-import React, { useState, type PropsWithChildren } from "react"
-
+import React, { type PropsWithChildren } from "react"
 
 export interface QuantityButtonProps {
     quantity: number,
@@ -51,7 +50,7 @@ export interface RemoveDialogProps {
     closeModal : () => void
     removeId: number | string | null
     orders:orderDetails[]
-    shoesData: detailsInterface[] | null
+    shoesData?: detailsInterface[] | null
     handleOrder: (orders: orderDetails[]) => void
 }
 
@@ -92,8 +91,8 @@ export interface descriptionInterface{
 export interface orderDetails extends detailsInterface {
   size?: number | undefined
   quantity: number
-  shippingfee: number
-  total: number
+  shippingfee?: number
+  total?: number
 
 }
 

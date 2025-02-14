@@ -1,8 +1,11 @@
 import React, { useRef, useState } from "react"
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Pagination, Navigation } from 'swiper/modules';
+ // @ts-expect-error Already install
 import 'swiper/css';
+ // @ts-expect-error Already install
 import 'swiper/css/navigation';
+ // @ts-expect-error Already install
 import 'swiper/css/pagination';
 import "./Checkout.css"
 import { CheckOutProps, orderDetails, OrderProps, QuantityButtonProps, RemoveDialogProps, PaymentProps } from "./types";
@@ -148,7 +151,7 @@ function PaymentDetails({orders} : PaymentProps):JSX.Element | string | null{
 
         }
     }
-
+    // @ts-expect-error e means event handler
     function submitCode(e){
         e.preventDefault()
         setShowDiscount(true)

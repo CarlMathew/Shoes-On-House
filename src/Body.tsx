@@ -1,11 +1,14 @@
 import Logo from "./assets/logo.png"
 import "./Body.css"
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { useRef, useState, type PropsWithChildren } from "react"
+import { useRef, useState } from "react"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+ // @ts-expect-error Already install
 import 'swiper/css';
+  // @ts-expect-error Already install
 import 'swiper/css/navigation';
+ // @ts-expect-error Already install
 import 'swiper/css/pagination';
 import { detailsInterface, shopListInterface,
          descriptionInterface, sliderDetails, 
@@ -229,15 +232,17 @@ const sliderData: sliderDetails[] = [
 ]
 
 
-function ShoeSizeDialog({dialogRef, shoeSize, setShoeSize, idNumber, orderList, handleOrder, shoesData, clearAll, closeModal}: DialogProps): JSX.Element | null | string {
+function ShoeSizeDialog({dialogRef, shoeSize, setShoeSize, idNumber, orderList, handleOrder, shoesData, closeModal}: DialogProps): JSX.Element | null | string {
     function acceptOrder(){
 
-         const orderShoes: detailsInterface[] | undefined = shoesData?.find(data => data.id == idNumber);
+         const orderShoes: detailsInterface | undefined = shoesData?.find(data => data.id === Number(idNumber));
 
         if (shoeSize === undefined) {
             console.log("error")
         } else {
-            const updateShoes: orderDetails = {...orderShoes, size: shoeSize, quantity: 1}
+            // @ts-expect-error OrderShoes might be undefined, ensuring default values
+            
+            const updateShoes: orderDetails = {...orderShoes, size: shoeSize ?? undefined, quantity: 1}
             handleOrder([...orderList, updateShoes])
         }
 
@@ -252,7 +257,11 @@ function ShoeSizeDialog({dialogRef, shoeSize, setShoeSize, idNumber, orderList, 
             <div className="grid grid-cols-5 gap-2 mt-2">
                 {Array.from({length: 7}, (_, i) => (
                     <button  className="flex items-center justify-center">
-                        <span data-size = {i + 5} className="px-4 border-2 py-2 rounded-full border-black hover:bg-black hover:text-white" onClick={(e) => (setShoeSize(e.currentTarget.getAttribute("data-size")))}>{i + 5}</span>
+                        <span data-size = {i + 5} className="px-4 border-2 py-2 rounded-full border-black hover:bg-black hover:text-white"   
+                            onClick={(e) => {
+                            const size = e.currentTarget.getAttribute("data-size");
+                            setShoeSize(size ? parseInt(size, 10) : null);
+                        }}>{i + 5}</span>
                     </button>
                 ))}
             </div>
