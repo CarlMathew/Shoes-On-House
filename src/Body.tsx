@@ -1,4 +1,4 @@
-import Logo from "./assets/logo.png"
+import Logo from "/assets/logo.png"
 import "./Body.css"
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useRef, useState } from "react"
