@@ -28,31 +28,31 @@ const popularData: detailsInterface[] =
         {
             id: 1,
             name: "StrideX",
-            imgURL: "public/popular/sample_shoes.png",
+            imgURL: "/popular/sample_shoes.png",
             price: 102.99
         },
         {
             id: 2,
             name: "SoleCraft",
-            imgURL: "public/popular/sample_shoes2.png",
+            imgURL: "/popular/sample_shoes2.png",
             price: 111.15
         },
         {
             id: 3,
             name: "TrailTread",
-            imgURL: "public/popular/sample_shoes3.png",
+            imgURL: "/popular/sample_shoes3.png",
             price: 121.55
         },
         {
             id: 4,
             name: "FlexiStep",
-            imgURL: "public/popular/sample_shoes4.png",
+            imgURL: "/popular/sample_shoes4.png",
             price: 200.24
         },
         {
             id: 5,
             name: "UrbanSoles",
-            imgURL: "public/popular/sample_shoes5.png",
+            imgURL: "/popular/sample_shoes5.png",
             price: 80.99
         }
     ]
@@ -62,31 +62,31 @@ const newData: detailsInterface[] = [
     {
         id: 6,
         name: "RapidTrail",
-        imgURL: "public/new/new_shoes1.png",
+        imgURL: "/new/new_shoes1.png",
         price: 100.50
     },
     {
         id: 7,
         name: "DynamicStride",
-        imgURL: "public/new/new_shoes2.png",
+        imgURL: "/new/new_shoes2.png",
         price: 220.55
     },
     {
         id: 8,
         name: "CloudTread",
-        imgURL: "public/new/new_shoes3.png",
+        imgURL: "/new/new_shoes3.png",
         price: 105.99
     },
     {
         id: 9,
         name: "TerrainFlow",
-        imgURL: "public/new/new_shoes4.png",
+        imgURL: "/new/new_shoes4.png",
         price: 112.22
     },
     {
         id: 10,
         name: "VelocityVibe",
-        imgURL: "public/new/new_shoes5.png",
+        imgURL: "/new/new_shoes5.png",
         price:304.55
     }
 
@@ -96,24 +96,24 @@ const greatestData: descriptionInterface[] = [
     {
         id: 1,
         name: "Play With Style",
-        imgURL: "public/greatest_picture/badminton.jpg"
+        imgURL: "/greatest_picture/badminton.jpg"
     },
     {
         id: 2,
         name: "Rain Or Shine",
-        imgURL: "public/greatest_picture/basketball.jpg"
+        imgURL: "/greatest_picture/basketball.jpg"
 
     },
     {
         id: 3,
         name: "Shoes On The Go",
-        imgURL: "public/greatest_picture/wearing_shoes.jpg"
+        imgURL: "/greatest_picture/wearing_shoes.jpg"
 
     },
     {
         id: 4,
         name: "New Product: Jacket4z",
-        imgURL: "public/greatest_picture/model.jpg"
+        imgURL: "/greatest_picture/model.jpg"
 
     },
 
@@ -159,26 +159,26 @@ const description: descriptionInterface[] = [
     {
         id: 1,
         name: "Built to Last",
-        imgURL: "public/quality/shield.png",
+        imgURL: "/quality/shield.png",
         description: "Crafted with top-tier materials, our shoes are designed to withstand everyday wear and tear, ensuring long-lasting performance",
         
     },
     {
         id:2, 
         name: "Unmatched Comfort",
-        imgURL: "public/quality/comfort.png",
+        imgURL: "/quality/comfort.png",
         description: "Experience all-day comfort with superior cushioning, arch support, and a perfect fit that feels like they were made just for you."
     },
     {
         id:3,
         name: "Stylish Designs",
-        imgURL: "public/quality/eyeglasses.png",
+        imgURL: "/quality/eyeglasses.png",
         description: "Modern, sleek, and versatile—our shoes are perfect for any occasion, whether it’s casual, formal, or activewear."
     },
     {
         id: 4,
         name: "Lightweight Design",
-        imgURL: "public/quality/feather.png",
+        imgURL: "/quality/feather.png",
         description: "Move freely with shoes that are light as a feather but tough enough to handle your busy lifestyle."
     }
 ]
@@ -188,27 +188,27 @@ const sports:descriptionInterface[] = [
     {
         id: 1,
         name: "Football",
-        imgURL: "public/sports/football.png"
+        imgURL: "/sports/football.png"
     },
     {
         id:2,
         name: "Basketball",
-        imgURL: "public/sports/basketball.png"
+        imgURL: "/sports/basketball.png"
     },
     {
         id:3,
         name: "Running",
-        imgURL: "public/sports/running.jpg"
+        imgURL: "/sports/running.jpg"
     },
     {
         id:4,
         name: "Swimming",
-        imgURL: "public/sports/swimming.png"
+        imgURL: "/sports/swimming.png"
     },
     {
         id:5,
         name:"Gym and Training",
-        imgURL: "public/sports/gym.png"
+        imgURL: "/sports/gym.png"
     }
 ]
 
@@ -405,7 +405,7 @@ export default function BodyElement({ orderData, handleOrder, clearAll }: BodyPr
                 <div className="w-full md:w-1/6 flex items-center justify-center order-2 md:order-1"><h1 className=" font-black text-[35px] md:text-[65px] md:[writing-mode:vertical-lr] md:-rotate-180 text-center mt-5 md:mt-0">Give, Gift Comfort</h1></div>
                 <div className="md:order-2">
                     <video loop autoPlay controls className="md:h-[720px] w-full md:w-[1280px] mt-8 rounded-lg">
-                        <source src="public/video/Basketball.mp4" type="video/mp4" />
+                        <source src="/video/Basketball.mp4" type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
                 </div>
