@@ -91,7 +91,7 @@ export default function ShopMore(): JSX.Element | string | null {
        }
     }, [count])
 
-    function filterShoes(e){
+    function filterShoes(e:React.ChangeEvent<HTMLInputElement>){
     
         if(e.target.checked && count == 0){
             console.log("Dito 1")
