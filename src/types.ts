@@ -59,7 +59,9 @@ export interface detailsInterface {
     readonly id: number;
     name: string,
     imgURL: string
-    price: number
+    price: number,
+    category?:string
+    click?:boolean
 }
 
 export type BodyProps = PropsWithChildren<{
@@ -79,6 +81,9 @@ export interface sliderDetails {
 }
 
 
+export interface filterProps {
+    value: string
+}
 
 
 export interface descriptionInterface{
